@@ -116,5 +116,5 @@
   .chartGrid { grid-template-columns: 1fr; }
   .summaryGrid { grid-template-columns: 1fr 1fr; }
   .summaryGrid .summaryCard:last-child { grid-column: span 2; }
-  .descCell { display: none; }
+
 }

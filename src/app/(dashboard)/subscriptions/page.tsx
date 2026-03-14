@@ -253,6 +253,7 @@ export default function SubscriptionsPage() {
             <button className={styles.emptyBtn} onClick={openCreate}>+ 구독 추가</button>
           </div>
         ) : (
+          <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead>
               <tr>
@@ -308,6 +309,7 @@ export default function SubscriptionsPage() {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

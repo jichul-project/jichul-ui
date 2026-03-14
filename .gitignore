@@ -1,6 +1,9 @@
 .idea/
 .vscode/
 
+.env
+.env*
+
 # next-pwa 빌드 시 자동 생성 (커밋 불필요)
 /public/sw.js
 /public/sw.js.map

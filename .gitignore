@@ -1,4 +1,25 @@
 .idea/
 .vscode/
-.next/
-node_modules/
+
+# next-pwa 빌드 시 자동 생성 (커밋 불필요)
+/public/sw.js
+/public/sw.js.map
+/public/workbox-*.js
+/public/workbox-*.js.map
+
+# Next.js
+/.next/
+/out/
+/build
+
+# 환경 변수
+.env.local
+.env.*.local
+
+# 의존성
+/node_modules/
+
+# 기타
+.DS_Store
+*.pem
+npm-debug.log*

@@ -1,0 +1,119 @@
+.wrap { display: flex; flex-direction: column; gap: 1.5rem; }
+
+/* 헤더 */
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+.subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.btnAdd {
+  padding: 8px 16px; background: var(--accent); color: var(--accent-fg);
+  border: none; border-radius: var(--radius-md); font-size: 13px; font-weight: 500;
+  white-space: nowrap; flex-shrink: 0; transition: opacity 0.12s; cursor: pointer;
+}
+.btnAdd:hover { opacity: 0.85; }
+
+/* 요약 카드 */
+.summaryGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.summaryCard {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.summaryLabel { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+.summaryValue { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.summarySub { font-size: 11px; color: var(--text-muted); }
+
+.error { font-size: 13px; color: var(--danger); background: var(--danger-bg); padding: 8px 12px; border-radius: var(--radius-sm); }
+
+/* 차트 그리드 */
+.chartGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.chartCard {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+.chartTitle { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* 도넛 차트 */
+.donutWrap { display: flex; align-items: center; gap: 20px; }
+
+.legend { display: flex; flex-direction: column; gap: 7px; flex: 1; min-width: 0; }
+.legendItem { display: flex; align-items: center; gap: 7px; }
+.legendDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legendName { font-size: 12px; color: var(--text-secondary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legendPct { font-size: 12px; font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+/* 바 차트 */
+.barList { display: flex; flex-direction: column; gap: 10px; }
+.barRow { display: flex; align-items: center; gap: 10px; }
+.barLabel {
+  font-size: 12px; color: var(--text-secondary); width: 130px; flex-shrink: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.barTrack { flex: 1; height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; min-width: 40px; }
+.barFill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
+.barAmt { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text-primary); white-space: nowrap; width: 84px; text-align: right; flex-shrink: 0; }
+
+/* 테이블 */
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th {
+  text-align: left; padding: 10px 16px;
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+  background: var(--bg);
+}
+.table td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: var(--bg); transition: background 0.1s; }
+
+/* 정렬 헤더 */
+.sortable { cursor: pointer; user-select: none; }
+.sortable:hover { color: var(--text-primary); }
+.sortNone { opacity: 0.3; font-size: 10px; margin-left: 3px; }
+.sortActive { font-size: 10px; margin-left: 3px; color: var(--text-primary); }
+
+/* 서비스명 셀 */
+.nameCell { display: flex; align-items: center; }
+
+
+.nameTxt { font-weight: 500; }
+.providerCell { color: var(--text-secondary); white-space: nowrap; }
+.amountCell { display: flex; flex-direction: column; gap: 1px; }
+.amountMain { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.amountSub { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.monthly { background: var(--info-bg); color: var(--info); }
+.yearly  { background: var(--success-bg); color: var(--success); }
+
+.descCell { max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-secondary); font-size: 12px; }
+.nil { color: var(--text-muted); }
+.actionsCell { text-align: right; white-space: nowrap; width: 110px; }
+.btnEdit, .btnDel { padding: 4px 10px; border-radius: var(--radius-sm); font-size: 12px; border: 1px solid var(--border); background: none; margin-left: 5px; transition: background 0.12s, color 0.12s; cursor: pointer; }
+.btnEdit { color: var(--text-secondary); }
+.btnEdit:hover { background: var(--bg); color: var(--text-primary); }
+.btnDel { color: var(--danger); border-color: transparent; }
+.btnDel:hover { background: var(--danger-bg); }
+
+/* 빈 상태 */
+.emptyState { display: flex; flex-direction: column; align-items: center; padding: 3.5rem 2rem; text-align: center; gap: 6px; }
+.emptyTitle { font-size: 14px; font-weight: 600; }
+.emptyDesc { font-size: 13px; color: var(--text-secondary); }
+.emptyBtn { margin-top: 10px; padding: 8px 16px; background: var(--accent); color: var(--accent-fg); border: none; border-radius: var(--radius-md); font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity 0.12s; }
+.emptyBtn:hover { opacity: 0.85; }
+
+/* 스켈레톤 */
+.skeletonWrap { display: flex; flex-direction: column; }
+.skeletonRow { height: 52px; border-bottom: 1px solid var(--border); background: linear-gradient(90deg, var(--surface) 25%, var(--bg) 50%, var(--surface) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+.skeletonRow:last-child { border-bottom: none; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+@media (max-width: 780px) {
+  .chartGrid { grid-template-columns: 1fr; }
+  .summaryGrid { grid-template-columns: 1fr 1fr; }
+  .summaryGrid .summaryCard:last-child { grid-column: span 2; }
+  .descCell { display: none; }
+}

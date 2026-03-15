@@ -16,8 +16,9 @@ export function saveTokens(accessToken: string, refreshToken: string) {
   localStorage.setItem("accessToken", accessToken);
   localStorage.setItem("refreshToken", refreshToken);
   // 미들웨어(서버)에서 읽을 수 있도록 쿠키에도 저장
-  // max-age=1800 → 액세스 토큰 만료(30분)와 동기화
-  document.cookie = `accessToken=${accessToken}; path=/; max-age=1800; SameSite=Strict`;
+  // max-age=604800 → 리프레시 토큰 만료(7일)와 동기화
+  // proxy.ts에서 로그인 여부 판단용이므로 리프레시 토큰 기준으로 설정
+  document.cookie = `accessToken=${accessToken}; path=/; max-age=604800; SameSite=Strict`;
 }
 
 export function clearTokens() {

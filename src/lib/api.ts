@@ -84,8 +84,7 @@ async function request<T>(
     }
   }
 
-  const json: ApiResponse<T> = await res.json();
-  return json;
+  return await res.json();
 }
 
 export const api = {

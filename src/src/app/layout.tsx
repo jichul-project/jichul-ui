@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "지출 관리",

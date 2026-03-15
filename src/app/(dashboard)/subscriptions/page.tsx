@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useSubscriptions, type SubscriptionPayload } from "@/hooks/useSubscriptions";
 import { useProviders } from "@/hooks/useProviders";
 import Modal from "@/components/ui/Modal";

@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { logout, getStoredUser } from "@/lib/auth";
 import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 import styles from "./Sidebar.module.css";
 
 const NAV = [
@@ -15,8 +16,41 @@ export default function Sidebar() {
   const [name, setName] = useState("");
 
   useEffect(() => {
-    const user = getStoredUser();
-    if (user) setName(user.name);
+    let mounted = true;
+
+    async function loadUser() {
+      try {
+        const res = await api.get<{ id: string; email: string; name: string }>("/api/auth/me");
+
+        if (mounted && res.success && res.data) {
+          setName(res.data.name);
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              id: res.data.id,
+              email: res.data.email,
+              name: res.data.name,
+            })
+          );
+
+          return;
+        }
+      } catch {
+        // fallback below
+      }
+
+      const storedUser = getStoredUser();
+      if (mounted && storedUser) {
+        setName(storedUser.name);
+      }
+    }
+
+    void loadUser();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (

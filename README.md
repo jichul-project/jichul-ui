@@ -2,62 +2,85 @@
 
 ## 기술 스택
 
-| 항목         | 버전                |
-|------------|-------------------|
-| Next.js    | 16.x (App Router) |
-| React      | 19.x              |
-| TypeScript | 5.x               |
+| 항목              | 버전                |
+|-----------------|-------------------|
+| Next.js         | 16.x (App Router) |
+| React           | 19.x              |
+| TypeScript      | 5.x               |
+| PWA             | Serwist           |
+| Package Manager | npm               |
+
+---
+
+## 프로젝트 개요
+
+구독 서비스 지출을 관리하는 Next.js 기반 PWA 애플리케이션입니다.
+
+주요 목적은 다음과 같습니다.
+
+- 구독 서비스 목록/요약 관리
+- 제공사 관리
+- JWT 기반 로그인
+- 설치형 PWA 지원
+- 모바일 환경에서 안정적인 로그인 유지
+
+---
 
 ## 프로젝트 구조
 
-```
+```text
 src/
 ├── app/
-│   ├── layout.tsx                 # 루트 레이아웃
-│   ├── page.tsx                   # / → /subscriptions 리다이렉트
-│   ├── globals.css                # 전역 CSS 변수, 다크모드
-│   ├── login/
-│   │   └── page.tsx               # 로그인
-│   ├── register/
-│   │   └── page.tsx               # 회원가입
-│   └── (dashboard)/               # 인증 필요 영역 (Route Group)
-│       ├── layout.tsx             # Sidebar 포함 공통 레이아웃
-│       ├── subscriptions/
-│       │   └── page.tsx           # 구독 목록, 요약 카드, 차트, 정렬
-│       └── providers/
-│           └── page.tsx           # 제공사 관리
-│
+│ ├── (dashboard)/
+│ │ ├── layout.tsx
+│ │ ├── providers/
+│ │ │ └── page.tsx
+│ │ └── subscriptions/
+│ │ └── page.tsx
+│ ├── api/
+│ │ ├── auth/
+│ │ │ ├── login/route.ts
+│ │ │ ├── logout/route.ts
+│ │ │ ├── me/route.ts
+│ │ │ └── refresh/route.ts
+│ │ └── proxy/
+│ │ └── [...path]/route.ts
+│ ├── login/
+│ │ └── page.tsx
+│ ├── globals.css
+│ ├── layout.tsx
+│ ├── manifest.ts
+│ └── page.tsx
 ├── components/
-│   ├── layout/
-│   │   └── Sidebar.tsx            # 사이드바 내비게이션
-│   └── ui/
-│       ├── Modal.tsx              # 공용 모달
-│       └── form.module.css        # 공용 폼 스타일
-│
+│ ├── layout/
+│ │ ├── Sidebar.module.css
+│ │ └── Sidebar.tsx
+│ └── ui/
+│ ├── Modal.tsx
+│ └── form.module.css
 ├── hooks/
-│   ├── useSubscriptions.ts        # 구독 CRUD + 요약 상태 관리
-│   └── useProviders.ts            # 제공사 CRUD 상태 관리
-│
+│ ├── useProviders.ts
+│ └── useSubscriptions.ts
 ├── lib/
-│   ├── api.ts                     # fetch 래퍼 (401 시 자동 토큰 갱신)
-│   └── auth.ts                    # 로그인, 로그아웃, 유저 정보 헬퍼
-│
+│ ├── api.ts
+│ └── auth.ts
 ├── types/
-│   └── index.ts                   # 공통 타입 정의
-│
-└── proxy.ts                       # 미인증 사용자 /login 리다이렉트
+│ └── index.ts
+├── proxy.ts
+└── sw.ts
 ```
+
+---
 
 ## 주요 기능
 
 ### 구독 목록 페이지
 
 - 월 총 지출 / 연 총 지출 / 구독 수 요약 카드
-- **도넛 차트**: 제공사별 월 지출 비중 (SVG, 외부 라이브러리 미사용)
-- **수평 바 차트**: 구독별 월 지출 순위 Top 7
-- 구독 테이블: 서비스명 / 제공사 / 금액 / 타입 / 설명
-- 컬럼 클릭으로 오름차순/내림차순 정렬
-- 구독 등록 / 수정 / 삭제 (모달)
+- 제공사별 월 지출 비중 도넛 차트
+- 구독별 월 지출 순위 바 차트
+- 구독 등록 / 수정 / 삭제
+- 컬럼 정렬 지원
 
 ### 제공사 관리 페이지
 
@@ -67,63 +90,142 @@ src/
 
 ### 인증
 
-- JWT 기반 로그인 (이메일 + 비밀번호)
-- 액세스 토큰 만료(401) 시 리프레시 토큰으로 자동 갱신 후 원래 요청 재시도
-- 갱신 실패 시 `/login`으로 자동 이동
-- 로그아웃 시 토큰 및 쿠키 전체 삭제
-- `proxy.ts`로 미인증 사용자 접근 차단
+- 이메일 + 비밀번호 로그인
+- 액세스 토큰 만료 시 자동 갱신 후 재요청
+- 갱신 실패 시 `/login` 이동
+- 로그아웃 시 인증 쿠키 삭제
+- `proxy.ts`로 인증 필요 페이지 보호
+
+### PWA
+
+- 설치형 앱 지원
+- Service Worker 기반 정적 리소스 캐시
+- API 요청은 캐시하지 않음
+- 모바일 홈 화면 설치 후 standalone 실행 가능
+
+---
+
+## 인증 구조
+
+이 프로젝트는 **쿠키 기반 인증 구조**를 사용합니다.
+
+### 핵심 원칙
+
+- `accessToken` → **HttpOnly Cookie**
+- `refreshToken` → **HttpOnly Cookie**
+- 클라이언트는 토큰을 `localStorage`에 저장하지 않음
+- 모든 API 호출은 **same-origin** 경로로 통일
+- Next.js Route Handler가 백엔드 API와 통신하는 **BFF(Backend For Frontend)** 역할 수행
+
+### 인증 흐름
+
+1. 사용자가 `/login`에서 로그인
+2. `POST /api/auth/login` 호출
+3. Next 서버가 백엔드 로그인 API 호출
+4. 응답으로 받은 토큰을 HttpOnly 쿠키에 저장
+5. 이후 클라이언트는 `/api/proxy/*` 또는 `/api/auth/*`만 호출
+6. 401 발생 시 `/api/auth/refresh`로 토큰 재발급
+7. 실패 시 `/login`으로 이동
+
+### 라우팅 보호 방식
+
+- `src/proxy.ts`는 `refreshToken` 쿠키 존재 여부를 기준으로 보호
+- 실제 토큰 유효성은 API 요청 시 검증
+
+---
+
+## API 호출 구조
+
+클라이언트는 백엔드 주소를 직접 호출하지 않습니다.
+
+### 클라이언트에서 사용하는 경로
+
+```typescript
+const res1 = await api.get("/api/proxy/subscriptions");
+const res2 = await api.get("/api/proxy/providers");
+const res3 = await api.post("/api/auth/login", {email, password});
+const res4 = await api.get("/api/auth/me");
+```
+
+### 서버에서의 역할
+
+- `src/app/api/auth/*`  
+  인증 관련 처리 및 쿠키 제어
+- `src/app/api/proxy/[...path]/route.ts`  
+  일반 업무 API를 백엔드로 프록시
+
+---
 
 ## 환경 변수
 
-| 변수명                   | 설명         | 기본값                     |
-|-----------------------|------------|-------------------------|
-| `NEXT_PUBLIC_API_URL` | 백엔드 API 주소 | `http://localhost:8080` |
+### 필수
 
-> `NEXT_PUBLIC_API_URL`이 설정되지 않으면 `http://localhost:8080`으로 동작합니다.
+| 변수명               | 설명                      | 예시                      |
+|-------------------|-------------------------|-------------------------|
+| `BACKEND_API_URL` | Next 서버가 호출할 백엔드 API 주소 | `http://localhost:8080` |
+
+### 예시
+
+```env
+BACKEND_API_URL=[http://localhost:8080](http://localhost:8080)
+```
+
+> 현재 구조에서는 클라이언트가 직접 백엔드를 호출하지 않으므로  
+> `NEXT_PUBLIC_API_URL`은 필수가 아닙니다.
+
+---
 
 ## 실행 방법
 
-### 개발 서버
+### 의존성 설치
 
 ```bash
 npm install
+```
+
+### 개발 서버 실행
+
+```bash
 npm run dev
 ```
 
-브라우저에서 `http://localhost:3000` 접속
+> Next.js 16 + Serwist 조합 이슈를 피하기 위해  
+> 개발 서버는 `next dev --webpack`으로 실행하도록 설정하는 것을 권장합니다.
 
 ### 프로덕션 빌드
 
 ```bash
-npm run build
-npm start
+npm run build npm start
 ```
 
-## API 연동 방식
+---
 
-`src/lib/api.ts`의 `api` 객체를 통해 모든 요청이 처리됩니다.
+## PWA 구성
 
-```typescript
-// 사용 예시
-const res = await api.get<Subscription[]>("/api/subscriptions");
-const res = await api.post<Provider>("/api/providers", {name: "Netflix"});
-const res = await api.put<Provider>(`/api/providers/${id}`, {name: "수정된 이름"});
-const res = await api.delete(`/api/providers/${id}`);
-```
+### Manifest
 
-401 응답 시 리프레시 토큰으로 자동 갱신 후 1회 재시도합니다. 갱신에 실패하면 토큰을 삭제하고 `/login`으로 이동합니다.
+- `src/app/manifest.ts` 사용
+- `id`, `scope`, `start_url`, `display: "standalone"` 설정
+- 홈 화면 설치 가능
 
-## 토큰 저장 방식
+### Service Worker
 
-| 저장소            | 항목             | 용도                       |
-|----------------|----------------|--------------------------|
-| `localStorage` | `accessToken`  | API 요청 헤더 첨부             |
-| `localStorage` | `refreshToken` | 토큰 갱신 요청                 |
-| `localStorage` | `user`         | 사이드바 사용자 이름 표시           |
-| `Cookie`       | `accessToken`  | `proxy.ts`(서버 사이드) 인증 확인 |
+- 소스: `src/sw.ts`
+- 빌드 결과물: `public/sw.js`
+- API 요청은 `NetworkOnly`
+- 정적 리소스는 Serwist 기본 캐시 전략 사용
 
-쿠키의 `accessToken`은 `proxy.ts`에서 미인증 여부 판단에만 사용되며, 실제 API 요청에는 `localStorage`의 토큰이 사용됩니다.
+---
 
-## 다크모드
+## 로그인 유지 관련 설계 포인트
 
-`globals.css`에서 `@media (prefers-color-scheme: dark)`로 시스템 설정을 따릅니다. 별도 토글 없이 자동 전환됩니다.
+모바일 설치형 PWA에서 로그인 유지가 안정적으로 동작하도록 다음 원칙을 따릅니다.
+
+- 토큰을 `localStorage`에 저장하지 않음
+- 인증 상태는 쿠키 기준으로 관리
+- 브라우저/설치형 앱 모두 same-origin 요청 사용
+- 짧은 수명의 `accessToken` 대신 `refreshToken` 쿠키 기준으로 라우팅 보호
+- 실제 인증 보장은 API 요청 시 처리
+
+이 구조는 브라우저 탭 / 설치형 PWA / 모바일 재실행 환경에서  
+기존 localStorage 기반 방식보다 더 안정적입니다.

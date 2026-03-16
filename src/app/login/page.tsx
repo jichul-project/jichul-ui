@@ -16,8 +16,10 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       await login(email, password);
+      router.refresh();
       router.push("/subscriptions");
     } catch (err) {
       setError(err instanceof Error ? err.message : "로그인에 실패했습니다.");

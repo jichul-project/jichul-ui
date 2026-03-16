@@ -1,13 +1,13 @@
-import type {Metadata, Viewport} from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import {Analytics} from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 import React from "react";
-import {SpeedInsights} from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "지출 관리",
   description: "구독 서비스 지출을 한눈에 관리하세요.",
-  manifest: "/manifest.json",
+  manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -23,16 +23,18 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({children}: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-        <meta name="mobile-web-app-capable" content="yes" />
-      </head>
-      <body>{children}</body>
-      <SpeedInsights />
-      <Analytics />
+    <head>
+      <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      <meta name="mobile-web-app-capable" content="yes" />
+    </head>
+    <body>
+    {children}
+    <SpeedInsights />
+    <Analytics />
+    </body>
     </html>
   );
 }

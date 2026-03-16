@@ -144,7 +144,7 @@
 .providerList {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 20px;
 }
 
 .providerRow {

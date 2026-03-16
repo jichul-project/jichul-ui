@@ -28,19 +28,33 @@ const PALETTE = [
   "#f98016",
 ];
 
-function colorIdx(name: string) {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) {
-    h = name.charCodeAt(i) + ((h << 5) - h);
-  }
-  return Math.abs(h) % PALETTE.length;
-}
-
 function getMonthlyAmount(item: Subscription) {
   return item.type === "MONTHLY" ? item.amount : Math.round(item.amount / 12);
 }
 
+function buildProviderColorMap(subscriptions: Subscription[]) {
+  const totals = new Map<string, number>();
+
+  subscriptions.forEach((item) => {
+    const monthly = getMonthlyAmount(item);
+    totals.set(item.providerName, (totals.get(item.providerName) ?? 0) + monthly);
+  });
+
+  const sortedProviders = [...totals.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([providerName]) => providerName);
+
+  return new Map(
+    sortedProviders.map((providerName, index) => [
+      providerName,
+      PALETTE[index % PALETTE.length],
+    ])
+  );
+}
+
 function ProviderShareCard({ subscriptions }: { subscriptions: Subscription[] }) {
+  const providerColorMap = useMemo(() => buildProviderColorMap(subscriptions), [subscriptions]);
+
   const rows = useMemo(() => {
     const map: Record<string, number> = {};
 
@@ -57,10 +71,15 @@ function ProviderShareCard({ subscriptions }: { subscriptions: Subscription[] })
         name,
         value,
         pct: total === 0 ? 0 : Math.round((value / total) * 100),
-        color: PALETTE[colorIdx(name)],
+        color: providerColorMap.get(name) ?? PALETTE[0],
       }))
       .filter((row) => row.pct > 0);
-  }, [subscriptions]);
+  }, [subscriptions, providerColorMap]);
+
+  const monthlyTotal = useMemo(
+    () => subscriptions.reduce((sum, item) => sum + getMonthlyAmount(item), 0),
+    [subscriptions]
+  );
 
   return (
     <div className={styles.chartCard}>
@@ -86,6 +105,8 @@ function ProviderShareCard({ subscriptions }: { subscriptions: Subscription[] })
 }
 
 function BarChart({ subscriptions }: { subscriptions: Subscription[] }) {
+  const providerColorMap = useMemo(() => buildProviderColorMap(subscriptions), [subscriptions]);
+
   const bars = useMemo(() => {
     const sorted = [...subscriptions]
       .map((item) => ({
@@ -102,9 +123,9 @@ function BarChart({ subscriptions }: { subscriptions: Subscription[] }) {
     return sorted.map((item) => ({
       ...item,
       pct: (item.monthly / max) * 100,
-      color: PALETTE[colorIdx(item.providerName)],
+      color: providerColorMap.get(item.providerName) ?? PALETTE[0],
     }));
-  }, [subscriptions]);
+  }, [subscriptions, providerColorMap]);
 
   return (
     <div className={styles.chartCard}>

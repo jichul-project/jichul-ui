@@ -38,9 +38,6 @@ export default function Sidebar() {
 
       <div className={styles.bottom}>
         <button type="button" className={styles.logout} onClick={logout}>
-          <span className={styles.logoutIcon} aria-hidden="true">
-            ↪
-          </span>
           <span>로그아웃</span>
         </button>
       </div>

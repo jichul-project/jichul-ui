@@ -22,8 +22,8 @@
 
 .title {
   font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
+  font-weight: 800;
+  letter-spacing: -0.45px;
   color: var(--text-primary);
 }
 
@@ -47,6 +47,7 @@
   background: var(--danger-bg);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
+  line-height: 1.45;
 }
 
 .field {
@@ -57,7 +58,7 @@
 
 .label {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-secondary);
 }
 
@@ -66,7 +67,7 @@
   min-height: 44px;
   padding: 0 13px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: 14px;
   background: var(--bg);
   color: var(--text-primary);
   font-size: 14px;
@@ -88,17 +89,18 @@
   min-height: 46px;
   margin-top: 6px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   background: var(--accent);
   color: var(--accent-fg);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.12s, transform 0.12s;
+  transition: opacity 0.12s, transform 0.12s, box-shadow 0.12s;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 0.18);
 }
 
 .btn:hover {
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .btn:active {
@@ -120,7 +122,7 @@
 
 .link {
   color: var(--accent);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .link:hover {
@@ -140,7 +142,7 @@
     max-width: none;
     margin: auto 0;
     padding: 22px 18px;
-    border-radius: 16px;
+    border-radius: 18px;
   }
 
   .title {
@@ -176,7 +178,7 @@
 
   .card {
     padding: 18px 16px;
-    border-radius: 14px;
+    border-radius: 16px;
   }
 
   .title {

@@ -2,11 +2,12 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgb(0 0 0 / 0.48);
+  background: rgb(0 0 0 / 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  backdrop-filter: blur(2px);
 }
 
 .modal {
@@ -17,7 +18,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 20px 60px rgb(0 0 0 / 0.25);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.28);
 }
 
 .header {
@@ -27,13 +28,15 @@
   gap: 12px;
   padding: 16px 18px;
   border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 92%, var(--bg));
 }
 
 .title {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.2px;
   margin: 0;
+  color: var(--text-primary);
 }
 
 .close {
@@ -45,11 +48,16 @@
   border-radius: 999px;
   cursor: pointer;
   flex-shrink: 0;
+  transition: background 0.12s, color 0.12s, transform 0.12s;
 }
 
 .close:hover {
   background: var(--bg);
   color: var(--text-primary);
+}
+
+.close:active {
+  transform: translateY(1px);
 }
 
 .body {
@@ -61,14 +69,14 @@
 
 @media (max-width: 640px) {
   .overlay {
-    padding: 12px;
+    padding: 10px;
     align-items: flex-end;
   }
 
   .modal {
     max-width: none;
-    max-height: calc(100vh - 24px);
-    border-radius: 18px 18px 0 0;
+    max-height: calc(100vh - 20px);
+    border-radius: 20px 20px 0 0;
   }
 
   .header {
@@ -81,13 +89,13 @@
 
   .body {
     padding: 16px;
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 96px);
   }
 }
 
 @media (max-width: 480px) {
   .overlay {
-    padding: 8px;
+    padding: 6px;
   }
 
   .header {

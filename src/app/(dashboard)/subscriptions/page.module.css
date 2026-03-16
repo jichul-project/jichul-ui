@@ -4,7 +4,6 @@
   gap: 1.5rem;
 }
 
-/* 헤더 */
 .header {
   display: flex;
   align-items: flex-start;
@@ -14,38 +13,48 @@
 
 .title {
   font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
+  font-weight: 700;
+  letter-spacing: -0.35px;
+  color: var(--text-primary);
 }
 
 .subtitle {
   font-size: 13px;
   color: var(--text-secondary);
-  margin-top: 2px;
+  margin-top: 4px;
+  line-height: 1.45;
 }
 
 .btnAdd {
-  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
   background: var(--accent);
   color: var(--accent-fg);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: opacity 0.12s;
+  transition: opacity 0.12s, transform 0.12s, box-shadow 0.12s;
   cursor: pointer;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.14);
 }
 
 .btnAdd:hover {
-  opacity: 0.85;
+  opacity: 0.92;
 }
 
-/* 요약 카드 */
+.btnAdd:active {
+  transform: translateY(1px);
+}
+
 .summaryGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -56,39 +65,42 @@
   padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
+  box-shadow: var(--shadow-sm);
 }
 
 .summaryLabel {
   font-size: 11px;
   color: var(--text-muted);
-  font-weight: 500;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .summaryValue {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.5px;
   font-variant-numeric: tabular-nums;
   margin-top: 2px;
+  color: var(--text-primary);
 }
 
 .summarySub {
   font-size: 11px;
   color: var(--text-muted);
+  line-height: 1.4;
 }
 
 .error {
   font-size: 13px;
   color: var(--danger);
   background: var(--danger-bg);
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: var(--radius-sm);
+  line-height: 1.45;
 }
 
-/* 차트 그리드 */
 .chartGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -103,17 +115,17 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  box-shadow: var(--shadow-sm);
 }
 
 .chartTitle {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* 도넛 차트 */
 .donutWrap {
   display: flex;
   align-items: center;
@@ -152,13 +164,12 @@
 
 .legendPct {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
 
-/* 바 차트 */
 .barList {
   display: flex;
   flex-direction: column;
@@ -183,11 +194,11 @@
 
 .barTrack {
   flex: 1;
+  min-width: 40px;
   height: 6px;
   background: var(--border);
   border-radius: 999px;
   overflow: hidden;
-  min-width: 40px;
 }
 
 .barFill {
@@ -197,22 +208,26 @@
 }
 
 .barAmt {
+  width: 84px;
+  flex-shrink: 0;
+  text-align: right;
+  white-space: nowrap;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
-  white-space: nowrap;
-  width: 84px;
-  text-align: right;
-  flex-shrink: 0;
 }
 
-/* 테이블 */
 .section {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.tableHint {
+  display: none;
 }
 
 .tableWrap {
@@ -231,7 +246,7 @@
   text-align: left;
   padding: 10px 16px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -255,7 +270,6 @@
   transition: background 0.1s;
 }
 
-/* 정렬 헤더 */
 .sortable {
   cursor: pointer;
   user-select: none;
@@ -277,14 +291,14 @@
   color: var(--text-primary);
 }
 
-/* 서비스명 셀 */
 .nameCell {
   display: flex;
   align-items: center;
 }
 
 .nameTxt {
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .providerCell {
@@ -299,9 +313,10 @@
 }
 
 .amountMain {
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  color: var(--text-primary);
 }
 
 .amountSub {
@@ -311,11 +326,13 @@
 }
 
 .badge {
-  display: inline-block;
-  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -345,18 +362,23 @@
 .actionsCell {
   text-align: right;
   white-space: nowrap;
-  width: 110px;
+  width: 116px;
 }
 
 .btnEdit,
 .btnDel {
-  padding: 4px 10px;
-  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
   font-size: 12px;
+  font-weight: 600;
   border: 1px solid var(--border);
-  background: none;
+  background: transparent;
   margin-left: 5px;
-  transition: background 0.12s, color 0.12s;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
   cursor: pointer;
 }
 
@@ -371,14 +393,14 @@
 
 .btnDel {
   color: var(--danger);
-  border-color: transparent;
+  border-color: color-mix(in srgb, var(--danger) 22%, var(--border));
 }
 
 .btnDel:hover {
   background: var(--danger-bg);
+  border-color: transparent;
 }
 
-/* 빈 상태 */
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -390,32 +412,34 @@
 
 .emptyTitle {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .emptyDesc {
   font-size: 13px;
   color: var(--text-secondary);
+  line-height: 1.45;
 }
 
 .emptyBtn {
   margin-top: 10px;
-  padding: 8px 16px;
+  min-height: 42px;
+  padding: 0 16px;
   background: var(--accent);
   color: var(--accent-fg);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   transition: opacity 0.12s;
 }
 
 .emptyBtn:hover {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
-/* 스켈레톤 */
 .skeletonWrap {
   display: flex;
   flex-direction: column;
@@ -444,9 +468,14 @@
 }
 
 @media (max-width: 768px) {
+  .wrap {
+    gap: 1.25rem;
+  }
+
   .header {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.875rem;
   }
 
   .btnAdd {
@@ -472,13 +501,25 @@
     gap: 1rem;
   }
 
+  .header {
+    gap: 0.75rem;
+  }
+
   .title {
     font-size: 18px;
+    line-height: 1.25;
   }
 
   .subtitle {
     font-size: 12px;
-    line-height: 1.45;
+    line-height: 1.5;
+    margin-top: 3px;
+  }
+
+  .btnAdd {
+    width: 100%;
+    min-height: 46px;
+    font-size: 14px;
   }
 
   .summaryCard {
@@ -487,6 +528,11 @@
 
   .summaryValue {
     font-size: 20px;
+  }
+
+  .chartCard {
+    padding: 14px;
+    gap: 12px;
   }
 
   .donutWrap {
@@ -507,6 +553,13 @@
     width: 72px;
   }
 
+  .tableHint {
+    display: block;
+    padding: 10px 12px 0;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
   .table {
     min-width: 680px;
     font-size: 12px;
@@ -520,8 +573,9 @@
 
   .btnEdit,
   .btnDel {
-    min-height: 34px;
-    padding: 6px 10px;
+    min-height: 32px;
+    padding: 0 10px;
+    font-size: 11px;
   }
 
   .emptyState {
@@ -535,8 +589,16 @@
 }
 
 @media (max-width: 480px) {
+  .title {
+    font-size: 17px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
   .chartCard {
-    padding: 14px;
+    padding: 13px;
   }
 
   .summaryValue {

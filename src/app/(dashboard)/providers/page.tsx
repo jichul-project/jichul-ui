@@ -29,8 +29,10 @@ export default function ProvidersPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
+
     setFormError("");
     setSubmitting(true);
+
     try {
       if (modal?.mode === "edit" && modal.provider) {
         await update(modal.provider.id, name.trim());
@@ -47,6 +49,7 @@ export default function ProvidersPage() {
 
   async function handleDelete(provider: Provider) {
     if (!confirm(`"${provider.name}" 제공사를 삭제할까요?`)) return;
+
     try {
       await remove(provider.id);
     } catch (err) {
@@ -61,26 +64,40 @@ export default function ProvidersPage() {
           <h1 className={styles.title}>제공사 관리</h1>
           <p className={styles.subtitle}>구독 서비스 제공사를 등록하고 관리합니다.</p>
         </div>
-        <button className={styles.btnAdd} onClick={openCreate}>+ 추가</button>
+
+        <button className={styles.btnAdd} onClick={openCreate}>
+          + 추가
+        </button>
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
 
       <div className={styles.section}>
         {loading ? (
-          <p className={styles.empty}>불러오는 중...</p>
+          <div className={styles.skeletonWrap}>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className={styles.skeletonRow} />
+            ))}
+          </div>
         ) : providers.length === 0 ? (
-          <p className={styles.empty}>등록된 제공사가 없습니다. 추가 버튼을 눌러 시작하세요.</p>
+          <div className={styles.emptyState}>
+            <p className={styles.emptyTitle}>등록된 제공사가 없습니다</p>
+            <p className={styles.emptyDesc}>추가 버튼을 눌러 첫 번째 제공사를 등록해 보세요.</p>
+            <button className={styles.emptyBtn} onClick={openCreate}>
+              + 추가
+            </button>
+          </div>
         ) : (
-          <table className={styles.table}>
-            <thead>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
               <tr>
                 <th>제공사 이름</th>
                 <th>등록일</th>
                 <th></th>
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
               {providers.map((p) => (
                 <tr key={p.id}>
                   <td className={styles.nameCell}>{p.name}</td>
@@ -88,13 +105,18 @@ export default function ProvidersPage() {
                     {new Date(p.createdAt).toLocaleDateString("ko-KR")}
                   </td>
                   <td className={styles.actionsCell}>
-                    <button className={styles.btnEdit} onClick={() => openEdit(p)}>수정</button>
-                    <button className={styles.btnDel} onClick={() => handleDelete(p)}>삭제</button>
+                    <button className={styles.btnEdit} onClick={() => openEdit(p)}>
+                      수정
+                    </button>
+                    <button className={styles.btnDel} onClick={() => handleDelete(p)}>
+                      삭제
+                    </button>
                   </td>
                 </tr>
               ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
@@ -105,6 +127,7 @@ export default function ProvidersPage() {
         >
           <form onSubmit={handleSubmit} className={f.form}>
             {formError && <p className={f.error}>{formError}</p>}
+
             <div className={f.field}>
               <label className={f.label}>제공사 이름</label>
               <input
@@ -117,8 +140,11 @@ export default function ProvidersPage() {
                 maxLength={100}
               />
             </div>
+
             <div className={f.actions}>
-              <button type="button" className={f.btnCancel} onClick={() => setModal(null)}>취소</button>
+              <button type="button" className={f.btnCancel} onClick={() => setModal(null)}>
+                취소
+              </button>
               <button type="submit" className={f.btnSubmit} disabled={submitting || !name.trim()}>
                 {submitting ? "저장 중..." : "저장"}
               </button>

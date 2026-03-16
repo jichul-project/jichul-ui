@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useSubscriptions, type SubscriptionPayload } from "@/hooks/useSubscriptions";
 import { useProviders } from "@/hooks/useProviders";
 import Modal from "@/components/ui/Modal";
@@ -8,7 +8,10 @@ import type { Subscription } from "@/types";
 import styles from "./page.module.css";
 import f from "@/components/ui/form.module.css";
 
-const TYPE_LABEL: Record<string, string> = { MONTHLY: "월결제", YEARLY: "년결제" };
+const TYPE_LABEL: Record<string, string> = {
+  MONTHLY: "월결제",
+  YEARLY: "년결제",
+};
 
 function fmt(n: number) {
   return n.toLocaleString("ko-KR") + "원";
@@ -22,99 +25,61 @@ const PALETTE = [
   "#0ea5e9",
   "#8b5cf6",
   "#10b981",
-  "#f97316",
+  "#f98016",
 ];
 
 function colorIdx(name: string) {
   let h = 0;
-  for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
+  for (let i = 0; i < name.length; i++) {
+    h = name.charCodeAt(i) + ((h << 5) - h);
+  }
   return Math.abs(h) % PALETTE.length;
 }
 
-function DonutChart({ subscriptions }: { subscriptions: Subscription[] }) {
-  const slices = useMemo(() => {
+function getMonthlyAmount(item: Subscription) {
+  return item.type === "MONTHLY" ? item.amount : Math.round(item.amount / 12);
+}
+
+function ProviderShareCard({ subscriptions }: { subscriptions: Subscription[] }) {
+  const rows = useMemo(() => {
     const map: Record<string, number> = {};
-    subscriptions.forEach((s) => {
-      const monthly = s.type === "MONTHLY" ? s.amount : Math.round(s.amount / 12);
-      map[s.providerName] = (map[s.providerName] ?? 0) + monthly;
+
+    subscriptions.forEach((item) => {
+      const monthly = getMonthlyAmount(item);
+      map[item.providerName] = (map[item.providerName] ?? 0) + monthly;
     });
-    const total = Object.values(map).reduce((a, b) => a + b, 0);
-    let cumAngle = -Math.PI / 2;
+
+    const total = Object.values(map).reduce((sum, value) => sum + value, 0);
 
     return Object.entries(map)
       .sort((a, b) => b[1] - a[1])
-      .map(([name, val]) => {
-        const angle = (val / total) * 2 * Math.PI;
-        const start = cumAngle;
-        cumAngle += angle;
-        const ci = colorIdx(name);
-        return {
-          name,
-          val,
-          pct: Math.round((val / total) * 100),
-          angle,
-          start,
-          color: PALETTE[ci],
-        };
-      });
+      .map(([name, value]) => ({
+        name,
+        value,
+        pct: total === 0 ? 0 : Math.round((value / total) * 100),
+        color: PALETTE[colorIdx(name)],
+      }))
+      .filter((row) => row.pct > 0);
   }, [subscriptions]);
-
-  const cx = 90;
-  const cy = 90;
-  const r = 68;
-  const ri = 44;
-
-  function arc(slice: (typeof slices)[0]) {
-    const x1 = cx + r * Math.cos(slice.start);
-    const y1 = cy + r * Math.sin(slice.start);
-    const x2 = cx + r * Math.cos(slice.start + slice.angle);
-    const y2 = cy + r * Math.sin(slice.start + slice.angle);
-    const xi1 = cx + ri * Math.cos(slice.start);
-    const yi1 = cy + ri * Math.sin(slice.start);
-    const xi2 = cx + ri * Math.cos(slice.start + slice.angle);
-    const yi2 = cy + ri * Math.sin(slice.start + slice.angle);
-    const large = slice.angle > Math.PI ? 1 : 0;
-
-    return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${ri} ${ri} 0 ${large} 0 ${xi1} ${yi1} Z`;
-  }
-
-  const monthlyTotal = subscriptions.reduce(
-    (s, x) => s + (x.type === "MONTHLY" ? x.amount : Math.round(x.amount / 12)),
-    0
-  );
 
   return (
     <div className={styles.chartCard}>
-      <p className={styles.chartTitle}>제공사별 월 지출 비중</p>
-      <div className={styles.donutWrap}>
-        <svg viewBox="0 0 180 180" width={160} height={160} style={{ flexShrink: 0 }}>
-          {slices.map((s, i) => (
-            <path key={i} d={arc(s)} fill={s.color} opacity={0.9} />
-          ))}
-          <text x={cx} y={cy - 8} textAnchor="middle" fontSize="10" fill="var(--text-muted)">
-            월 합계
-          </text>
-          <text
-            x={cx}
-            y={cy + 8}
-            textAnchor="middle"
-            fontSize="12"
-            fontWeight="600"
-            fill="var(--text-primary)"
-          >
-            {Math.round(monthlyTotal / 1000)}K원
-          </text>
-        </svg>
+      <div className={styles.chartHeader}>
+        <p className={styles.chartTitle}>제공사별 월 지출 비중</p>
+      </div>
 
-        <div className={styles.legend}>
-          {slices.map((s, i) => (
-            <div key={i} className={styles.legendItem}>
-              <span className={styles.legendDot} style={{ background: s.color }} />
-              <span className={styles.legendName}>{s.name}</span>
-              <span className={styles.legendPct}>{s.pct}%</span>
+      <div className={styles.providerList}>
+        {rows.map((row) => (
+          <div key={row.name} className={styles.providerRow}>
+            <div className={styles.providerLeft}>
+              <span className={styles.legendDot} style={{ background: row.color }} />
+              <span className={styles.providerName} title={row.name}>
+                {row.name}
+              </span>
             </div>
-          ))}
-        </div>
+            <span className={styles.providerPct}>{row.pct}%</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -123,39 +88,43 @@ function DonutChart({ subscriptions }: { subscriptions: Subscription[] }) {
 function BarChart({ subscriptions }: { subscriptions: Subscription[] }) {
   const bars = useMemo(() => {
     const sorted = [...subscriptions]
-      .map((s) => ({
-        name: s.name,
-        providerName: s.providerName,
-        monthly: s.type === "MONTHLY" ? s.amount : Math.round(s.amount / 12),
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        providerName: item.providerName,
+        monthly: getMonthlyAmount(item),
       }))
       .sort((a, b) => b.monthly - a.monthly)
-      .slice(0, 7);
+      .slice(0, 10);
 
     const max = sorted[0]?.monthly ?? 1;
 
-    return sorted.map((s) => ({
-      ...s,
-      pct: (s.monthly / max) * 100,
-      ci: colorIdx(s.providerName),
+    return sorted.map((item) => ({
+      ...item,
+      pct: (item.monthly / max) * 100,
+      color: PALETTE[colorIdx(item.providerName)],
     }));
   }, [subscriptions]);
 
   return (
     <div className={styles.chartCard}>
-      <p className={styles.chartTitle}>구독별 월 지출 순위</p>
+      <p className={styles.chartTitle}>구독별 월 지출 순위 Top 10</p>
+
       <div className={styles.barList}>
-        {bars.map((b, i) => (
-          <div key={i} className={styles.barRow}>
-            <span className={styles.barLabel} title={b.name}>
-              {b.name}
+        {bars.map((bar) => (
+          <div key={bar.id} className={styles.barRow}>
+            <span className={styles.barLabel} title={bar.name}>
+              {bar.name}
             </span>
+
             <div className={styles.barTrack}>
               <div
                 className={styles.barFill}
-                style={{ width: `${b.pct}%`, background: PALETTE[b.ci] }}
+                style={{ width: `${bar.pct}%`, background: bar.color }}
               />
             </div>
-            <span className={styles.barAmt}>{fmt(b.monthly)}</span>
+
+            <span className={styles.barAmt}>{fmt(bar.monthly)}</span>
           </div>
         ))}
       </div>
@@ -190,8 +159,9 @@ export default function SubscriptionsPage() {
   }
 
   function handleSort(key: SortKey) {
-    if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    else {
+    if (sortKey === key) {
+      setSortDir((dir) => (dir === "asc" ? "desc" : "asc"));
+    } else {
       setSortKey(key);
       setSortDir("desc");
     }
@@ -200,6 +170,7 @@ export default function SubscriptionsPage() {
   const sorted = useMemo(() => {
     return [...subscriptions].sort((a, b) => {
       let cmp = 0;
+
       if (sortKey === "amount") cmp = a.amount - b.amount;
       else if (sortKey === "type") cmp = a.type.localeCompare(b.type);
       else cmp = (a[sortKey] as string).localeCompare(b[sortKey] as string);
@@ -240,8 +211,12 @@ export default function SubscriptionsPage() {
 
     try {
       const payload = { ...form, amount: Number(form.amount) };
-      if (modal?.mode === "edit" && modal.sub) await update(modal.sub.id, payload);
-      else await create(payload);
+
+      if (modal?.mode === "edit" && modal.sub) {
+        await update(modal.sub.id, payload);
+      } else {
+        await create(payload);
+      }
 
       setModal(null);
     } catch (err) {
@@ -271,6 +246,7 @@ export default function SubscriptionsPage() {
           <h1 className={styles.title}>구독 목록</h1>
           <p className={styles.subtitle}>등록된 구독 서비스를 관리합니다.</p>
         </div>
+
         <button className={styles.btnAdd} onClick={openCreate}>
           + 구독 추가
         </button>
@@ -304,7 +280,7 @@ export default function SubscriptionsPage() {
 
       {hasData && (
         <div className={styles.chartGrid}>
-          <DonutChart subscriptions={subscriptions} />
+          <ProviderShareCard subscriptions={subscriptions} />
           <BarChart subscriptions={subscriptions} />
         </div>
       )}
@@ -319,9 +295,7 @@ export default function SubscriptionsPage() {
         ) : subscriptions.length === 0 ? (
           <div className={styles.emptyState}>
             <p className={styles.emptyTitle}>등록된 구독이 없습니다</p>
-            <p className={styles.emptyDesc}>
-              구독 추가 버튼을 눌러 첫 번째 구독을 등록해 보세요.
-            </p>
+            <p className={styles.emptyDesc}>구독 추가 버튼을 눌러 첫 번째 구독을 등록해 보세요.</p>
             <button className={styles.emptyBtn} onClick={openCreate}>
               + 구독 추가
             </button>
@@ -347,6 +321,7 @@ export default function SubscriptionsPage() {
                 <th></th>
               </tr>
               </thead>
+
               <tbody>
               {sorted.map((sub) => {
                 const monthlyEquiv = sub.type === "YEARLY" ? Math.round(sub.amount / 12) : null;
@@ -355,16 +330,21 @@ export default function SubscriptionsPage() {
                   <tr key={sub.id}>
                     <td>
                       <div className={styles.nameCell}>
-                        <span className={styles.nameTxt}>{sub.name}</span>
+                          <span className={styles.nameTxt} title={sub.name}>
+                            {sub.name}
+                          </span>
                       </div>
                     </td>
+
                     <td className={styles.providerCell}>{sub.providerName}</td>
+
                     <td>
                       <div className={styles.amountCell}>
                         <span className={styles.amountMain}>{fmt(sub.amount)}</span>
                         {monthlyEquiv && <span className={styles.amountSub}>월 {fmt(monthlyEquiv)}</span>}
                       </div>
                     </td>
+
                     <td>
                         <span
                           className={`${styles.badge} ${
@@ -374,6 +354,7 @@ export default function SubscriptionsPage() {
                           {TYPE_LABEL[sub.type]}
                         </span>
                     </td>
+
                     <td className={styles.descCell}>
                       {sub.description ? (
                         <span title={sub.description}>{sub.description}</span>
@@ -381,6 +362,7 @@ export default function SubscriptionsPage() {
                         <span className={styles.nil}>—</span>
                       )}
                     </td>
+
                     <td className={styles.actionsCell}>
                       <button className={styles.btnEdit} onClick={() => openEdit(sub)}>
                         수정

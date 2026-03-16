@@ -103,47 +103,62 @@
 
 .chartGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.25fr);
+  gap: 10px;
 }
 
 .chartCard {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 18px 20px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   box-shadow: var(--shadow-sm);
+  min-height: 0;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .chartTitle {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.donutWrap {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.chartMeta {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
-.legend {
+.providerList {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  flex: 1;
-  min-width: 0;
+  gap: 9px;
 }
 
-.legendItem {
+.providerRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.providerLeft {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .legendDot {
@@ -153,31 +168,33 @@
   flex-shrink: 0;
 }
 
-.legendName {
-  font-size: 12px;
+.providerName {
+  min-width: 0;
+  font-size: 13px;
   color: var(--text-secondary);
-  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.legendPct {
+.providerPct {
   font-size: 12px;
   font-weight: 700;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
-  flex-shrink: 0;
+  white-space: nowrap;
+  text-align: right;
 }
 
 .barList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 9px;
 }
 
 .barRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) 78px;
   align-items: center;
   gap: 10px;
 }
@@ -185,16 +202,14 @@
 .barLabel {
   font-size: 12px;
   color: var(--text-secondary);
-  width: 130px;
-  flex-shrink: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .barTrack {
-  flex: 1;
-  min-width: 40px;
+  width: 100%;
+  min-width: 0;
   height: 6px;
   background: var(--border);
   border-radius: 999px;
@@ -208,8 +223,6 @@
 }
 
 .barAmt {
-  width: 84px;
-  flex-shrink: 0;
   text-align: right;
   white-space: nowrap;
   font-size: 12px;
@@ -226,10 +239,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-.tableHint {
-  display: none;
-}
-
 .tableWrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -237,9 +246,46 @@
 
 .table {
   width: 100%;
-  min-width: 720px;
+  min-width: 820px;
   border-collapse: collapse;
   font-size: 13px;
+  table-layout: fixed;
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 240px;
+  min-width: 240px;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 124px;
+  min-width: 124px;
+}
+
+.table th:nth-child(3),
+.table td:nth-child(3) {
+  width: 112px;
+  min-width: 112px;
+}
+
+.table th:nth-child(4),
+.table td:nth-child(4) {
+  width: 92px;
+  min-width: 92px;
+}
+
+.table th:nth-child(5),
+.table td:nth-child(5) {
+  width: 170px;
+  min-width: 170px;
+}
+
+.table th:nth-child(6),
+.table td:nth-child(6) {
+  width: 112px;
+  min-width: 112px;
 }
 
 .table th {
@@ -292,11 +338,13 @@
 }
 
 .nameCell {
-  display: flex;
-  align-items: center;
+  display: block;
+  width: 100%;
 }
 
 .nameTxt {
+  display: block;
+  white-space: nowrap;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -323,6 +371,7 @@
   font-size: 11px;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .badge {
@@ -347,7 +396,7 @@
 }
 
 .descCell {
-  max-width: 240px;
+  max-width: 170px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -362,7 +411,7 @@
 .actionsCell {
   text-align: right;
   white-space: nowrap;
-  width: 116px;
+  width: 112px;
 }
 
 .btnEdit,
@@ -467,6 +516,12 @@
   }
 }
 
+@media (max-width: 1100px) {
+  .chartGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .wrap {
     gap: 1.25rem;
@@ -492,7 +547,27 @@
   }
 
   .chartCard {
-    padding: 16px;
+    padding: 14px 15px;
+  }
+
+  .barRow {
+    grid-template-columns: 96px minmax(0, 1fr) 82px;
+  }
+
+  .table {
+    min-width: 800px;
+  }
+
+  .table th:nth-child(1),
+  .table td:nth-child(1) {
+    width: 220px;
+    min-width: 220px;
+  }
+
+  .table th:nth-child(5),
+  .table td:nth-child(5) {
+    width: 160px;
+    min-width: 160px;
   }
 }
 
@@ -531,38 +606,66 @@
   }
 
   .chartCard {
-    padding: 14px;
-    gap: 12px;
+    padding: 13px 14px;
+    gap: 10px;
   }
 
-  .donutWrap {
+  .chartHeader {
     flex-direction: column;
-    align-items: center;
-    gap: 14px;
+    align-items: flex-start;
+    gap: 4px;
   }
 
-  .legend {
-    width: 100%;
-  }
-
-  .barLabel {
-    width: 96px;
-  }
-
-  .barAmt {
-    width: 72px;
-  }
-
-  .tableHint {
-    display: block;
-    padding: 10px 12px 0;
+  .chartTitle {
     font-size: 11px;
-    color: var(--text-muted);
+  }
+
+  .providerName,
+  .providerPct {
+    font-size: 11px;
+  }
+
+  .barList {
+    gap: 7px;
+  }
+
+  .barRow {
+    grid-template-columns: 88px minmax(0, 1fr) 72px;
+    gap: 8px;
+  }
+
+  .barLabel,
+  .barAmt {
+    font-size: 11px;
   }
 
   .table {
-    min-width: 680px;
+    min-width: 760px;
     font-size: 12px;
+  }
+
+  .table th:nth-child(1),
+  .table td:nth-child(1) {
+    width: 210px;
+    min-width: 210px;
+  }
+
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    width: 116px;
+    min-width: 116px;
+  }
+
+  .table th:nth-child(3),
+  .table td:nth-child(3) {
+    width: 104px;
+    min-width: 104px;
+  }
+
+  .table th:nth-child(5),
+  .table td:nth-child(5) {
+    width: 150px;
+    min-width: 150px;
   }
 
   .table th,
@@ -598,33 +701,40 @@
   }
 
   .chartCard {
-    padding: 13px;
+    padding: 12px 13px;
   }
 
   .summaryValue {
     font-size: 18px;
   }
 
-  .legendName,
-  .legendPct,
-  .barLabel,
-  .barAmt {
-    font-size: 11px;
-  }
-
-  .barLabel {
-    width: 84px;
-  }
-
-  .barAmt {
-    width: 64px;
-  }
-
-  .descCell {
-    max-width: 180px;
+  .barRow {
+    grid-template-columns: 82px minmax(0, 1fr) 68px;
   }
 
   .table {
-    min-width: 640px;
+    min-width: 720px;
+  }
+
+  .table th:nth-child(1),
+  .table td:nth-child(1) {
+    width: 130px;
+    min-width: 130px;
+  }
+
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    width: 108px;
+    min-width: 108px;
+  }
+
+  .table th:nth-child(5),
+  .table td:nth-child(5) {
+    width: 140px;
+    min-width: 140px;
+  }
+
+  .descCell {
+    max-width: 140px;
   }
 }

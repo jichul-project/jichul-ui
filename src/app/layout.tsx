@@ -7,7 +7,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 export const metadata: Metadata = {
   title: "지출 관리",
   description: "구독 서비스 지출을 한눈에 관리하세요.",
-  manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

@@ -1,53 +1,105 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  background: rgb(0 0 0 / 0.48);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 200;
-  padding: 1rem;
-  backdrop-filter: blur(2px);
+  padding: 20px;
 }
 
 .modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - 40px);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 440px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.25);
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1.5rem 0;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
 }
 
 .title {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.2px;
+  margin: 0;
 }
 
 .close {
-  background: none;
+  width: 36px;
+  height: 36px;
   border: none;
-  font-size: 14px;
-  color: var(--text-muted);
-  line-height: 1;
-  padding: 4px;
-  border-radius: var(--radius-sm);
-  transition: color 0.12s, background 0.12s;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 999px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .close:hover {
-  color: var(--text-primary);
   background: var(--bg);
+  color: var(--text-primary);
 }
 
 .body {
-  padding: 1.25rem 1.5rem 1.5rem;
+  padding: 18px;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+  .overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-width: none;
+    max-height: calc(100vh - 24px);
+    border-radius: 18px 18px 0 0;
+  }
+
+  .header {
+    padding: 14px 16px;
+  }
+
+  .title {
+    font-size: 15px;
+  }
+
+  .body {
+    padding: 16px;
+    max-height: calc(100vh - 100px);
+  }
+}
+
+@media (max-width: 480px) {
+  .overlay {
+    padding: 8px;
+  }
+
+  .header {
+    padding: 12px 14px;
+  }
+
+  .body {
+    padding: 14px;
+  }
+
+  .close {
+    width: 34px;
+    height: 34px;
+  }
 }

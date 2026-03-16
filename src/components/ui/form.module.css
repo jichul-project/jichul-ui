@@ -1,12 +1,26 @@
-.form { display: flex; flex-direction: column; gap: 14px; }
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 
-.field { display: flex; flex-direction: column; gap: 5px; }
+.error {
+  font-size: 13px;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
 
-.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
 .label {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-secondary);
 }
 
@@ -14,30 +28,44 @@
 .select,
 .textarea {
   width: 100%;
-  padding: 8px 11px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
   background: var(--bg);
   color: var(--text-primary);
+  border-radius: var(--radius-md);
   font-size: 14px;
-  transition: border-color 0.12s;
+  outline: none;
+  transition: border-color 0.12s, box-shadow 0.12s, background 0.12s;
+}
+
+.input,
+.select {
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.textarea {
+  min-height: 108px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-muted);
 }
 
 .input:focus,
 .select:focus,
 .textarea:focus {
-  outline: none;
-  border-color: var(--border-hover);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
-.textarea { resize: vertical; min-height: 72px; }
-
-.error {
-  font-size: 12px;
-  color: var(--danger);
-  background: var(--danger-bg);
-  padding: 7px 10px;
-  border-radius: var(--radius-sm);
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .actions {
@@ -47,28 +75,84 @@
   margin-top: 4px;
 }
 
-.btnCancel {
-  padding: 8px 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: none;
-  color: var(--text-secondary);
-  font-size: 13px;
-  transition: background 0.12s;
-}
-
-.btnCancel:hover { background: var(--bg); }
-
+.btnCancel,
 .btnSubmit {
-  padding: 8px 16px;
-  border: none;
+  min-height: 40px;
+  padding: 0 14px;
   border-radius: var(--radius-md);
-  background: var(--accent);
-  color: var(--accent-fg);
   font-size: 13px;
   font-weight: 500;
-  transition: opacity 0.12s;
+  cursor: pointer;
+  transition: opacity 0.12s, background 0.12s, color 0.12s, border-color 0.12s;
 }
 
-.btnSubmit:hover { opacity: 0.85; }
-.btnSubmit:disabled { opacity: 0.5; cursor: not-allowed; }
+.btnCancel {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btnCancel:hover {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.btnSubmit {
+  border: none;
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.btnSubmit:hover {
+  opacity: 0.88;
+}
+
+.btnSubmit:disabled,
+.btnCancel:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .form {
+    gap: 12px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .input,
+  .select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .textarea {
+    font-size: 16px;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .btnCancel,
+  .btnSubmit {
+    width: 100%;
+    min-height: 44px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .label {
+    font-size: 11px;
+  }
+
+  .error {
+    font-size: 12px;
+    padding: 9px 10px;
+  }
+}

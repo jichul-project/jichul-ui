@@ -1,16 +1,29 @@
 .shell {
-  display: flex;
   min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  background: var(--bg);
 }
 
 .main {
   flex: 1;
-  padding: 2rem 2.5rem;
-  max-width: 900px;
-  overflow-y: auto;
+  min-width: 0;
+  padding: 1.5rem;
 }
 
-@media (max-width: 640px) {
-  .shell { flex-direction: column; }
-  .main { padding: 1.25rem 1rem; }
+@media (max-width: 768px) {
+  .shell {
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 0.875rem;
+  }
 }

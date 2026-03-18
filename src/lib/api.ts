@@ -1,16 +1,37 @@
-import type {ApiResponse} from "@/types";
+import type { ApiResponse } from "@/types";
+
+let refreshPromise: Promise<boolean> | null = null;
 
 async function refreshAccessToken(): Promise<boolean> {
-  try {
-    const res = await fetch("/api/auth/refresh", {
-      method: "POST",
-      credentials: "include",
-    });
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        const res = await fetch("/api/auth/refresh", {
+          method: "POST",
+          credentials: "include",
+          cache: "no-store",
+        });
 
-    return res.ok;
-  } catch {
-    return false;
+        return res.ok;
+      } catch {
+        return false;
+      } finally {
+        refreshPromise = null;
+      }
+    })();
   }
+
+  return refreshPromise;
+}
+
+async function safeParseJson<T>(res: Response): Promise<T> {
+  const contentType = res.headers.get("content-type") ?? "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error("서버 응답이 JSON 형식이 아닙니다.");
+  }
+
+  return (await res.json()) as T;
 }
 
 async function request<T>(
@@ -44,7 +65,7 @@ async function request<T>(
     throw new Error("인증이 만료되었습니다.");
   }
 
-  return (await res.json()) as ApiResponse<T>;
+  return await safeParseJson<ApiResponse<T>>(res);
 }
 
 export const api = {

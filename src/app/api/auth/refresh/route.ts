@@ -8,10 +8,28 @@ export async function POST() {
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
   if (!refreshToken) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       { success: false, data: null, message: "리프레시 토큰이 없습니다." },
       { status: 401 }
     );
+
+    response.cookies.set("accessToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+
+    response.cookies.set("refreshToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+
+    return response;
   }
 
   const backendRes = await fetch(`${API_URL}/api/auth/refresh`, {

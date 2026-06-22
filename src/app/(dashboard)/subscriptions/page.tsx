@@ -449,6 +449,7 @@ export default function SubscriptionsPage() {
                 <label className={f.label}>금액</label>
                 <input
                   type="number"
+                  step={form.priceType === "WON" ? undefined : "0.01"}
                   className={f.input}
                   value={form.amount || ""}
                   min={1}

@@ -58,6 +58,8 @@ export function useSubscriptions() {
   };
 
   const update = async (id: string, payload: SubscriptionPayload) => {
+    console.log("payload", payload);
+
     const res = await api.put<Subscription>(`/api/proxy/subscriptions/${id}`, payload);
     if (!res.success) throw new Error(res.message ?? "수정 실패");
     await fetchAll();

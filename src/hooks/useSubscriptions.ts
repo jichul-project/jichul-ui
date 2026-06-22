@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { api } from "@/lib/api";
-import type { Subscription, Summary, SubscriptionType } from "@/types";
+import type { Subscription, Summary, SubscriptionType, SubscriptionPriceType } from "@/types";
 
 export interface SubscriptionPayload {
   name: string;
   amount: number;
   type: SubscriptionType;
+  priceType: SubscriptionPriceType;
   providerId: string;
   description: string;
 }

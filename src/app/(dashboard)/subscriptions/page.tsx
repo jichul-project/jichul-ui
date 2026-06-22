@@ -1,16 +1,22 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { useSubscriptions, type SubscriptionPayload } from "@/hooks/useSubscriptions";
-import { useProviders } from "@/hooks/useProviders";
+import React, {useMemo, useState} from "react";
+import {type SubscriptionPayload, useSubscriptions} from "@/hooks/useSubscriptions";
+import {useExchangeRate} from "@/hooks/useExchangeRate";
+import {useProviders} from "@/hooks/useProviders";
 import Modal from "@/components/ui/Modal";
-import type { Subscription } from "@/types";
+import type {Subscription} from "@/types";
 import styles from "./page.module.css";
 import f from "@/components/ui/form.module.css";
 
 const TYPE_LABEL: Record<string, string> = {
   MONTHLY: "월결제",
   YEARLY: "년결제",
+};
+
+const PRICE_TYPE_LABEL: Record<string, string> = {
+  WON: "₩",
+  DOLLAR: "$",
 };
 
 function fmt(n: number) {
@@ -52,7 +58,7 @@ function buildProviderColorMap(subscriptions: Subscription[]) {
   );
 }
 
-function ProviderShareCard({ subscriptions }: { subscriptions: Subscription[] }) {
+function ProviderShareCard({subscriptions}: { subscriptions: Subscription[] }) {
   const providerColorMap = useMemo(() => buildProviderColorMap(subscriptions), [subscriptions]);
 
   const rows = useMemo(() => {
@@ -91,7 +97,7 @@ function ProviderShareCard({ subscriptions }: { subscriptions: Subscription[] })
         {rows.map((row) => (
           <div key={row.name} className={styles.providerRow}>
             <div className={styles.providerLeft}>
-              <span className={styles.legendDot} style={{ background: row.color }} />
+              <span className={styles.legendDot} style={{background: row.color}}/>
               <span className={styles.providerName} title={row.name}>
                 {row.name}
               </span>
@@ -104,7 +110,7 @@ function ProviderShareCard({ subscriptions }: { subscriptions: Subscription[] })
   );
 }
 
-function BarChart({ subscriptions }: { subscriptions: Subscription[] }) {
+function BarChart({subscriptions}: { subscriptions: Subscription[] }) {
   const providerColorMap = useMemo(() => buildProviderColorMap(subscriptions), [subscriptions]);
 
   const bars = useMemo(() => {
@@ -141,7 +147,7 @@ function BarChart({ subscriptions }: { subscriptions: Subscription[] }) {
             <div className={styles.barTrack}>
               <div
                 className={styles.barFill}
-                style={{ width: `${bar.pct}%`, background: bar.color }}
+                style={{width: `${bar.pct}%`, background: bar.color}}
               />
             </div>
 
@@ -153,20 +159,22 @@ function BarChart({ subscriptions }: { subscriptions: Subscription[] }) {
   );
 }
 
-type SortKey = "name" | "providerName" | "amount" | "type";
+type SortKey = "name" | "providerName" | "amount" | "priceType" | "type";
 type SortDir = "asc" | "desc";
 
 const EMPTY_FORM: SubscriptionPayload = {
   name: "",
   amount: 0,
   type: "MONTHLY",
+  priceType: "WON",
   providerId: "",
   description: "",
 };
 
 export default function SubscriptionsPage() {
-  const { subscriptions, summary, loading, error, create, update, remove } = useSubscriptions();
-  const { providers } = useProviders();
+  const {subscriptions, summary, loading, error, create, update, remove} = useSubscriptions();
+  const {exchangeRate} = useExchangeRate();
+  const {providers} = useProviders();
 
   const [modal, setModal] = useState<{ mode: "create" | "edit"; sub?: Subscription } | null>(null);
   const [form, setForm] = useState<SubscriptionPayload>(EMPTY_FORM);
@@ -176,7 +184,7 @@ export default function SubscriptionsPage() {
   const [sortDir, setSortDir] = useState<SortDir>("desc");
 
   function setField<K extends keyof SubscriptionPayload>(key: K, val: SubscriptionPayload[K]) {
-    setForm((prev) => ({ ...prev, [key]: val }));
+    setForm((prev) => ({...prev, [key]: val}));
   }
 
   function handleSort(key: SortKey) {
@@ -200,7 +208,7 @@ export default function SubscriptionsPage() {
     });
   }, [subscriptions, sortKey, sortDir]);
 
-  function SortIcon({ col }: { col: SortKey }) {
+  function SortIcon({col}: { col: SortKey }) {
     if (sortKey !== col) return <span className={styles.sortNone}>↕</span>;
     return <span className={styles.sortActive}>{sortDir === "asc" ? "↑" : "↓"}</span>;
   }
@@ -208,19 +216,20 @@ export default function SubscriptionsPage() {
   function openCreate() {
     setForm(EMPTY_FORM);
     setFormError("");
-    setModal({ mode: "create" });
+    setModal({mode: "create"});
   }
 
   function openEdit(sub: Subscription) {
     setForm({
       name: sub.name,
-      amount: sub.amount,
+      amount: sub.priceType === "WON" ? sub.amount : sub.beforeAmount,
       type: sub.type,
+      priceType: sub.priceType,
       providerId: sub.providerId,
       description: sub.description ?? "",
     });
     setFormError("");
-    setModal({ mode: "edit", sub });
+    setModal({mode: "edit", sub});
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -231,7 +240,7 @@ export default function SubscriptionsPage() {
     setSubmitting(true);
 
     try {
-      const payload = { ...form, amount: Number(form.amount) };
+      const payload = {...form, amount: Number(form.amount)};
 
       if (modal?.mode === "edit" && modal.sub) {
         await update(modal.sub.id, payload);
@@ -266,6 +275,9 @@ export default function SubscriptionsPage() {
         <div>
           <h1 className={styles.title}>구독 목록</h1>
           <p className={styles.subtitle}>등록된 구독 서비스를 관리합니다.</p>
+          {exchangeRate && (
+            <p className={styles.exchangeRate}>환율 : {exchangeRate?.rate} | {exchangeRate?.detail} | {exchangeRate?.update}</p>
+          )}
         </div>
 
         <button className={styles.btnAdd} onClick={openCreate}>
@@ -301,8 +313,8 @@ export default function SubscriptionsPage() {
 
       {hasData && (
         <div className={styles.chartGrid}>
-          <ProviderShareCard subscriptions={subscriptions} />
-          <BarChart subscriptions={subscriptions} />
+          <ProviderShareCard subscriptions={subscriptions}/>
+          <BarChart subscriptions={subscriptions}/>
         </div>
       )}
 
@@ -310,7 +322,7 @@ export default function SubscriptionsPage() {
         {loading ? (
           <div className={styles.skeletonWrap}>
             {[...Array(4)].map((_, i) => (
-              <div key={i} className={styles.skeletonRow} />
+              <div key={i} className={styles.skeletonRow}/>
             ))}
           </div>
         ) : subscriptions.length === 0 ? (
@@ -327,16 +339,19 @@ export default function SubscriptionsPage() {
               <thead>
               <tr>
                 <th onClick={() => handleSort("name")} className={styles.sortable}>
-                  서비스 <SortIcon col="name" />
+                  서비스 <SortIcon col="name"/>
                 </th>
                 <th onClick={() => handleSort("providerName")} className={styles.sortable}>
-                  제공사 <SortIcon col="providerName" />
+                  제공사 <SortIcon col="providerName"/>
                 </th>
                 <th onClick={() => handleSort("amount")} className={styles.sortable}>
-                  금액 <SortIcon col="amount" />
+                  금액 <SortIcon col="amount"/>
+                </th>
+                <th onClick={() => handleSort("priceType")} className={styles.sortable}>
+                  결제 통화 <SortIcon col="priceType"/>
                 </th>
                 <th onClick={() => handleSort("type")} className={styles.sortable}>
-                  타입 <SortIcon col="type" />
+                  타입 <SortIcon col="type"/>
                 </th>
                 <th>설명</th>
                 <th></th>
@@ -345,6 +360,7 @@ export default function SubscriptionsPage() {
 
               <tbody>
               {sorted.map((sub) => {
+                const notWonEquiv = sub.priceType !== "WON";
                 const monthlyEquiv = sub.type === "YEARLY" ? Math.round(sub.amount / 12) : null;
 
                 return (
@@ -362,8 +378,17 @@ export default function SubscriptionsPage() {
                     <td>
                       <div className={styles.amountCell}>
                         <span className={styles.amountMain}>{fmt(sub.amount)}</span>
+                        {notWonEquiv && <span className={styles.amountSub}>${sub.beforeAmount}</span>}
                         {monthlyEquiv && <span className={styles.amountSub}>월 {fmt(monthlyEquiv)}</span>}
                       </div>
+                    </td>
+
+                    <td>
+                        <span
+                          className={`${styles.badge}`}
+                        >
+                          {PRICE_TYPE_LABEL[sub.priceType]}
+                        </span>
                     </td>
 
                     <td>
@@ -421,7 +446,7 @@ export default function SubscriptionsPage() {
 
             <div className={f.row}>
               <div className={f.field}>
-                <label className={f.label}>금액 (원)</label>
+                <label className={f.label}>금액</label>
                 <input
                   type="number"
                   className={f.input}
@@ -431,6 +456,18 @@ export default function SubscriptionsPage() {
                   placeholder="13500"
                   required
                 />
+              </div>
+
+              <div className={f.field}>
+                <label className={f.label}>결제 통화</label>
+                <select
+                  className={f.select}
+                  value={form.priceType}
+                  onChange={(e) => setField("priceType", e.target.value as "WON" | "DOLLAR")}
+                >
+                  <option value="WON">₩</option>
+                  <option value="DOLLAR">$</option>
+                </select>
               </div>
 
               <div className={f.field}>

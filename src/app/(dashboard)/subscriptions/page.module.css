@@ -367,6 +367,14 @@
   color: var(--text-primary);
 }
 
+.exchangeRate {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
 .amountSub {
   font-size: 11px;
   color: var(--text-muted);

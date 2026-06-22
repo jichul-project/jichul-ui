@@ -1,4 +1,5 @@
 export type SubscriptionType = "MONTHLY" | "YEARLY";
+export type SubscriptionPriceType = "WON" | "DOLLAR";
 
 export interface User {
   id: string;
@@ -19,11 +20,14 @@ export interface Subscription {
   name: string;
   amount: number;
   type: SubscriptionType;
+  priceType: SubscriptionPriceType;
   providerId: string;
   providerName: string;
   description: string | null;
   createdAt: string;
   updatedAt: string;
+
+  beforeAmount: number;
 }
 
 export interface Summary {
@@ -49,4 +53,10 @@ export interface LoginResponse extends AuthTokens {
   userId: string;
   email: string;
   name: string;
+}
+
+export interface ExchangeRate {
+  rate: number;
+  detail: number;
+  update: string
 }

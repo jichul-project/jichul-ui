@@ -10,19 +10,18 @@
   },
   "dependencies": {
     "@next/third-parties": "^16.2.10",
-    "@serwist/next": "^9.5.6",
-    "jose": "^5.9.6",
+    "@serwist/next": "^9.5.11",
     "next": "16.2.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
-    "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
+    "@types/node": "^22.20.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
     "eslint-config-next": "16.1.5",
-    "serwist": "^9.5.6",
-    "typescript": "^5"
+    "serwist": "^9.5.11",
+    "typescript": "^5.9.3"
   }
 }

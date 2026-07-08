@@ -1,87 +1,36 @@
-# jichul-ui
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## 기술 스택
+## Getting Started
 
-| 항목              | 버전                |
-|-----------------|-------------------|
-| Next.js         | 16.x (App Router) |
-| React           | 19.x              |
-| TypeScript      | 5.x               |
-| Package Manager | pnpm              |
-
----
-
-## 프로젝트 개요
-
-구독 서비스 지출을 관리하는 Next.js 기반 PWA 애플리케이션입니다.
-
-주요 목적은 다음과 같습니다.
-
-- 구독 서비스 목록/요약 관리
-- 제공사 관리
-- JWT 기반 로그인
-- 설치형 PWA 지원
-- 모바일 환경에서 안정적인 로그인 유지
-
----
-
-## 주요 기능
-
-### 구독 목록 페이지
-
-- 월 총 지출 / 연 총 지출 / 구독 수 요약 카드
-- 제공사별 월 지출 비중 도넛 차트
-- 구독별 월 지출 순위 바 차트
-- 구독 등록 / 수정 / 삭제
-- 컬럼 정렬 지원
-
-### 제공사 관리 페이지
-
-- 제공사 목록 조회
-- 제공사 등록 / 수정 / 삭제
-- 연결된 구독이 있는 제공사 삭제 방지
-
-### 인증
-
-- 이메일 + 비밀번호 로그인
-- 액세스 토큰 만료 시 자동 갱신 후 재요청
-- 갱신 실패 시 `/login` 이동
-- 로그아웃 시 인증 쿠키 삭제
-- `proxy.ts`로 인증 필요 페이지 보호
-
-### PWA
-
-- 설치형 앱 지원
-- 모바일 홈 화면 설치 후 standalone 실행 가능
-
----
-
-## 환경 변수
-
-### 필수
-
-| 변수명               | 설명                      | 예시                      |
-|-------------------|-------------------------|-------------------------|
-| `BACKEND_API_URL` | Next 서버가 호출할 백엔드 API 주소 | `http://localhost:8080` |
-
----
-
-## 실행 방법
-
-### 의존성 설치
+First, run the development server:
 
 ```bash
-pnpm install
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-### 개발 서버 실행
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```bash
-pnpm run dev
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-### 프로덕션 빌드
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-```bash
-pnpm run build pnpm start
-```
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

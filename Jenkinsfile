@@ -38,13 +38,12 @@ pipeline {
     stage("Docker Build and Push") {
       steps {
         sh """
-          docker build --platform linux/amd64 --provenance false --sbom false --build-arg NEXT_PUBLIC_GA_ID=${env.NEXT_PUBLIC_GA_ID} -t ${IMAGE_NAME}:${env.BUILD_NUMBER} -t ${IMAGE_NAME}:latest .
+          docker build --platform linux/amd64 --provenance false --sbom false --build-arg NEXT_PUBLIC_GA_ID=${env.NEXT_PUBLIC_GA_ID} -t ${IMAGE_NAME}:latest .
         """
 
         sh """
           echo \$GITHUB_CREDS_PSW | docker login ${IMAGE_REGISTRY} -u \$GITHUB_CREDS_USR --password-stdin
 
-          docker push ${IMAGE_NAME}:${env.BUILD_NUMBER}
           docker push ${IMAGE_NAME}:latest
         """
 
@@ -58,7 +57,6 @@ pipeline {
       steps {
         sh """
           docker system prune -f || true
-          docker rmi ${IMAGE_NAME}:${env.BUILD_NUMBER} || true
           docker rmi ${IMAGE_NAME}:latest || true
           docker logout ${IMAGE_REGISTRY} || true
         """

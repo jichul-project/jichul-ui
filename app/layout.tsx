@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import React from "react";
 import { GoogleAnalytics } from '@next/third-parties/google'
+import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: "지출 관리",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <body>
     {children}
     <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
+    <ServiceWorkerRegister />
     </body>
     </html>
   );

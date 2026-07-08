@@ -2,8 +2,6 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    id: "/",
-    scope: "/",
     start_url: "/subscriptions",
     name: "지출 관리",
     short_name: "지출 관리",

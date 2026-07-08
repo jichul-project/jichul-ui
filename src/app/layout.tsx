@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
 import React from "react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 export const metadata: Metadata = {
   title: "지출 관리",
@@ -31,8 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </head>
     <body>
     {children}
-    <SpeedInsights />
-    <Analytics />
+    <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
     </body>
     </html>
   );

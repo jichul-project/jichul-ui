@@ -8,7 +8,7 @@
 | React           | 19.x              |
 | TypeScript      | 5.x               |
 | PWA             | Serwist           |
-| Package Manager | npm               |
+| Package Manager | pnpm              |
 
 ---
 
@@ -177,13 +177,13 @@ BACKEND_API_URL=[http://localhost:8080](http://localhost:8080)
 ### 의존성 설치
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 개발 서버 실행
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 > Next.js 16 + Serwist 조합 이슈를 피하기 위해  
@@ -192,7 +192,7 @@ npm run dev
 ### 프로덕션 빌드
 
 ```bash
-npm run build npm start
+pnpm run build pnpm start
 ```
 
 ---

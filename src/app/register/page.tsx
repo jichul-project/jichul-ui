@@ -23,8 +23,7 @@ export default function RegisterPage() {
     try {
       const res = await api.post("/api/auth/register", form);
       if (!res.success) throw new Error(res.message ?? "회원가입 실패");
-      await login(form.email, form.password);
-      router.push("/subscriptions");
+      router.push("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "회원가입에 실패했습니다.");
     } finally {

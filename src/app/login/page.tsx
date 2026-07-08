@@ -67,12 +67,12 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/*<p className={styles.footer}>*/}
-        {/*  계정이 없으신가요?{" "}*/}
-          {/*<a href="/register" className={styles.link}>*/}
-          {/*  회원가입*/}
-          {/*</a>*/}
-        {/*</p>*/}
+        <p className={styles.footer}>
+          계정이 없으신가요?{" "}
+          <a href="/register" className={styles.link}>
+            회원가입
+          </a>
+        </p>
       </div>
     </div>
   );

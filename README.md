@@ -1,4 +1,4 @@
-# jichul
+# jichul-ui
 
 ## 기술 스택
 

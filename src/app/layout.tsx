@@ -21,6 +21,8 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+console.log("NEXT_PUBLIC_GA_ID", process.env.NEXT_PUBLIC_GA_ID)
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">

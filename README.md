@@ -170,9 +170,6 @@ const res4 = await api.get("/api/auth/me");
 BACKEND_API_URL=[http://localhost:8080](http://localhost:8080)
 ```
 
-> 현재 구조에서는 클라이언트가 직접 백엔드를 호출하지 않으므로  
-> `NEXT_PUBLIC_API_URL`은 필수가 아닙니다.
-
 ---
 
 ## 실행 방법
